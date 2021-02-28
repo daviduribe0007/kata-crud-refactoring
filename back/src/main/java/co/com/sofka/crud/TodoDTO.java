@@ -16,7 +16,7 @@ public class TodoDTO {
     @NotNull
     @NotBlank(message = "Name can't be empty")
     @Size(min = 1, max = 100, message = "The list only can be 1 or 100 characters")
-    @Pattern(regexp = "[A-Z0-9]+", message = "The list only can contain letters and numbers")
+    @Pattern(regexp = "[a-zA-Z0-9\\s]+", message = "The list only can contain letters and numbers")
     @Column(name = "name", length = 100)
     private String name;
     @Column(name = "complete")
