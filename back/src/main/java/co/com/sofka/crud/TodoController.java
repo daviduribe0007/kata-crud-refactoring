@@ -14,19 +14,19 @@ public class TodoController {
     private TodoDTA service;
 
     @GetMapping(value = "api/todos")
-    public Iterable<TodoDTO> list(){
+    public Iterable<Todo> list(){
         return service.list();
     }
     
     @PostMapping(value = "api/todo")
-    public TodoDTO save(@Validated @RequestBody TodoDTO todoDTO){
-        return service.save(todoDTO);
+    public Todo save(@Validated @RequestBody Todo todo){
+        return service.save(todo);
     }
 
     @PutMapping(value = "api/todo")
-    public TodoDTO update(@Validated @RequestBody TodoDTO todoDTO){
-        if(todoDTO.getId() != null){
-            return service.save(todoDTO);
+    public Todo update(@Validated @RequestBody Todo todo){
+        if(todo.getId() != null){
+            return service.save(todo);
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"The id not exist to update");
     }
@@ -37,7 +37,7 @@ public class TodoController {
     }
 
     @GetMapping(value = "api/{id}/todo")
-    public TodoDTO get(@PathVariable("id") Long id){
+    public Todo get(@PathVariable("id") Long id){
         return service.get(id);
     }
 

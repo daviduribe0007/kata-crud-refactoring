@@ -11,21 +11,21 @@ public class TodoDTA {
     @Autowired
     private TodoRepository repository;
 
-    public Iterable<TodoDTO> list(){
+    public Iterable<Todo> list(){
         return repository.findAll();
     }
 
-    public TodoDTO save(TodoDTO todoDTO){
-        if (validateBasicParameters(todoDTO).equals("")) {
+    public Todo save(Todo todo){
+        if (validateBasicParameters(todo).equals("")) {
             try {
-                validateChar(todoDTO);
-                return repository.save(todoDTO);
+                validateChar(todo);
+                return repository.save(todo);
 
             } catch (Exception exception) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Error"+exception);
             }
         }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,validateBasicParameters(todoDTO));
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,validateBasicParameters(todo));
     }
 
     public void delete(Long id){
@@ -39,11 +39,11 @@ public class TodoDTA {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"The character id only can contains positive numbers");
     }
 
-    public TodoDTO get(Long id){
+    public Todo get(Long id){
          return repository.findById(id).orElseThrow();
     }
 
-    private String validateBasicParameters(TodoDTO todo) {
+    private String validateBasicParameters(Todo todo) {
         String response = "";
 
         if (validateNull(todo.getName())) {
@@ -65,7 +65,7 @@ public class TodoDTA {
 
 
 
-    void validateChar(TodoDTO todo) {
+    void validateChar(Todo todo) {
         for (int i = 0; i < todo.getName().length(); i++) {
             if(isEspecialCharacter(todo, i, '#') || isEspecialCharacter(todo, i, '@') || isEspecialCharacter(todo, i, '$') || isEspecialCharacter(todo, i, '%')){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Error no se permiten caracteres especiales");
@@ -73,7 +73,7 @@ public class TodoDTA {
         }
     }
 
-    private boolean isEspecialCharacter(TodoDTO todo, int i, char c) {
+    private boolean isEspecialCharacter(Todo todo, int i, char c) {
         return todo.getName().charAt(i) == c;
     }
 
