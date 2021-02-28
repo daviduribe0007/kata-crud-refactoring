@@ -1,7 +1,9 @@
 package co.com.sofka.crud;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class CrudApplication {
@@ -10,4 +12,8 @@ public class CrudApplication {
 		SpringApplication.run(CrudApplication.class, args);
 	}
 
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
+	}
 }

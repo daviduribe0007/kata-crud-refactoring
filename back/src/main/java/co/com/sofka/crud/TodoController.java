@@ -1,10 +1,19 @@
 package co.com.sofka.crud;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -12,21 +21,42 @@ public class TodoController {
 
     @Autowired
     private TodoDTA service;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @GetMapping(value = "api/todos")
-    public Iterable<Todo> list(){
-        return service.list();
+    public List<TodoDTO> list(){
+        List<Todo> todos = service.list();
+        return todos.stream().map(this::convertToDto)
+                .collect(Collectors.toList());
     }
-    
+
     @PostMapping(value = "api/todo")
-    public Todo save(@Validated @RequestBody Todo todo){
-        return service.save(todo);
+    @ResponseBody
+    public TodoDTO save(@Validated @RequestBody TodoDTO todoDto) throws ParseException {
+        Todo todo = convertToEntity(todoDto);
+        Todo todoSaved = service.save(todo);
+        return convertToDto(todoSaved);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach(error -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 
     @PutMapping(value = "api/todo")
-    public Todo update(@Validated @RequestBody Todo todo){
+    public TodoDTO update(@Validated @RequestBody TodoDTO todoDTO) throws ParseException {
+        Todo todo = convertToEntity(todoDTO);
         if(todo.getId() != null){
-            return service.save(todo);
+            return convertToDto(service.save(todo));
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"The id not exist to update");
     }
@@ -37,10 +67,17 @@ public class TodoController {
     }
 
     @GetMapping(value = "api/{id}/todo")
-    public Todo get(@PathVariable("id") Long id){
-        return service.get(id);
+    public TodoDTO get(@PathVariable("id") Long id){
+        return convertToDto(service.get(id));
     }
 
+    private TodoDTO convertToDto(Todo todo) {
+        return modelMapper.map(todo, TodoDTO.class);
+    }
+
+    private Todo convertToEntity(TodoDTO todoDto) throws ParseException {
+        return modelMapper.map(todoDto, Todo.class);
+    }
 
 
 
