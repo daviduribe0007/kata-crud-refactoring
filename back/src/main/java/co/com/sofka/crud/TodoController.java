@@ -53,13 +53,15 @@ public class TodoController {
     }
 
     @PutMapping(value = "api/todo")
-    public TodoDTO update(@Validated @RequestBody TodoDTO todoDTO) throws ParseException {
-        Todo todo = convertToEntity(todoDTO);
+    public TodoDTO update(@RequestBody TodoDTO dataDto) throws ParseException {
+        Todo todo = convertToEntity(dataDto);
         if(todo.getId() != null){
             return convertToDto(service.save(todo));
         }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"The id not exist to update");
+        throw new RuntimeException("No existe el id para actualziar");
     }
+
+
 
     @DeleteMapping(value = "api/{id}/todo")
     public void delete(@PathVariable("id")Long id){

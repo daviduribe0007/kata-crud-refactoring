@@ -7,6 +7,6 @@ import lombok.Data;
 public class TodoDTO {
     private  long id;
     private  String  name;
-    private  boolean isComplete;
+    private  boolean completed;
 
 }

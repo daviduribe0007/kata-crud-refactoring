@@ -71,9 +71,9 @@ const Form = () => {
       defaultValue={item.name}
       onChange={(event) => {
         setState({ ...state, name: event.target.value })
-      }}  ></input>
-    {item.id && <button onClick={onEdit}>Actualizar</button>}
-    {!item.id && <button onClick={onAdd}>Crear</button>}
+      }}  className = "imputName"></input>
+    {item.id && <button onClick={onEdit}className="bntEdit">Actualizar</button>}
+    {!item.id && <button onClick={onAdd}className="bntCreate">Crear</button>}
   </form>
 }
 
@@ -125,11 +125,11 @@ const List = () => {
   const decorationDone = {
     textDecoration: 'line-through'
   };
-  return <div>
-    <table >
+  return <div >
+    <table  className= "tableClass">
       <thead>
         <tr>
-          <td>ID</td>
+          <td >ID</td>
           <td>Tarea</td>
           <td>¿Completado?</td>
         </tr>
@@ -140,10 +140,11 @@ const List = () => {
             <td>{todo.id}</td>
             <td>{todo.name}</td>
             <td><input type="checkbox" defaultChecked={todo.completed} onChange={(event) => onChange(event, todo)}></input></td>
-            <td><button onClick={() => onDelete(todo.id)}>Eliminar</button></td>
-            <td><button onClick={() => onEdit(todo)}>Editar</button></td>
+            <td><button onClick={() => onDelete(todo.id)}className="btnDelete">Eliminar</button></td>
+            <td><button onClick={() => onEdit(todo)} className="bntEdit">Editar</button></td>
           </tr>
         })}
+        
       </tbody>
     </table>
   </div>
@@ -199,8 +200,10 @@ const StoreProvider = ({ children }) => {
 
 function App() {
   return <StoreProvider>
+    <h1 className = "H1DashBoard">DahsBoard</h1>
     <h3>To-Do List</h3>
     <Form />
+    <br />
     <List />
   </StoreProvider>
 }
