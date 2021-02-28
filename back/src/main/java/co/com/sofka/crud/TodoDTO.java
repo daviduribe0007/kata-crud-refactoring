@@ -1,16 +1,27 @@
 package co.com.sofka.crud;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Entity
+@Table(name = "Todo")
 public class TodoDTO {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+    @NotNull
+    @NotBlank(message = "Name can't be empty")
+    @Size(min = 1, max = 100, message = "The list only can be 1 or 100 characters")
+    @Pattern(regexp = "[A-Z0-9]+", message = "The list only can contain letters and numbers")
+    @Column(name = "name", length = 100)
     private String name;
+    @Column(name = "complete")
     private boolean completed;
+    @Column(name = "GroupListId")
     private String groupListId;
 
     public String getGroupListId() {
