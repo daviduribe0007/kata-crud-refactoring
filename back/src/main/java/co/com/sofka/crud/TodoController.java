@@ -1,6 +1,7 @@
 package co.com.sofka.crud;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,12 +17,12 @@ public class TodoController {
     }
     
     @PostMapping(value = "api/todo")
-    public TodoDTO save(@RequestBody TodoDTO todoDTO){
+    public TodoDTO save(@Validated @RequestBody TodoDTO todoDTO){
         return service.save(todoDTO);
     }
 
     @PutMapping(value = "api/todo")
-    public TodoDTO update(@RequestBody TodoDTO todoDTO){
+    public TodoDTO update(@Validated @RequestBody TodoDTO todoDTO){
         if(todoDTO.getId() != null){
             return service.save(todoDTO);
         }
