@@ -7,14 +7,53 @@ const initialState = {
 const Store = createContext(initialState)
 
 
+
+
+
+
+
+
 const Form = () => {
   const formRef = useRef(null);
   const { dispatch, state: { todo } } = useContext(Store);
   const item = todo.item;
   const [state, setState] = useState(item);
+  const [error, setError] = useState(null)
+
+  const validName = () =>{
+    let isValid =true;
+    setError(null)
+    if(state.name.length<1 || state.name.length>100 || state.name===null) {
+      setError("The character only can contains letters,numbers and spaces , maximum 100 characteres minimun 1")
+      isValid = false
+    }
+    return isValid
+  }
+  const validadEspecialCharacters = () =>{
+    let isValidChar = true;
+    setError(null)
+    
+    for(var i =0; i<state.name.length;i++){
+      if(state.name.charAt(i)==='*'){
+        setError("The character #, *, $, % is not valid");
+        isValidChar = false;
+      }
+    }
+    return isValidChar;
+  }
+
 
   const onAdd = (event) => {
+
     event.preventDefault();
+    
+    if (!validName()){
+      return
+    };
+
+    if (!validadEspecialCharacters()){
+      return
+    };
 
     const request = {
       name: state.name,
@@ -39,7 +78,15 @@ const Form = () => {
   }
 
   const onEdit = (event) => {
+
     event.preventDefault();
+    
+    if (!validName()){
+      return
+    };
+    if (!validadEspecialCharacters()){
+      return
+    };
 
     const request = {
       name: state.name,
@@ -64,6 +111,11 @@ const Form = () => {
   }
 
   return <form ref={formRef}>
+    <div>
+      {
+        error && <span>{error}</span>
+      }
+    </div>
     <input
       type="text"
       name="name"
@@ -128,7 +180,7 @@ const List = () => {
   return <div >
     <table  className= "tableClass">
       <thead>
-        <tr>
+        <tr>          
           <td >ID</td>
           <td>Tarea</td>
           <td>¿Completado?</td>
